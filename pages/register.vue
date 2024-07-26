@@ -11,7 +11,7 @@
                 <button type="submit">สร้างบัญชีผู้ใช้</button>
             </form>
             <p class="signup-prompt">
-                มีบัญชีผู้ใช้อยู่แล้ว ? <a href="/login">เข้าสู่ระบบ</a>
+                มีบัญชีผู้ใช้อยู่แล้ว ? <NuxtLink to="/login">เข้าสู่ระบบ</NuxtLink>
             </p>
         </div>
     </div>

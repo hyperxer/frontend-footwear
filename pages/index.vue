@@ -9,6 +9,7 @@
       </div>
     </div>
     <a href="/all-products" class="view-all">VIEW ALL</a>
+    
   </div>
 </template>
 

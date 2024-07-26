@@ -4,7 +4,7 @@
   
   <nav :class="['navbar', { 'navbar-scrolled': isScrolled }]">
     <div class="navbar-brand">
-      <h1>Shoes Plus +</h1>
+      <nuxt-link to="/"><h1>Shoes Plus +</h1></nuxt-link>
     </div>
     <div class="navbar-menu">
       <ul>
