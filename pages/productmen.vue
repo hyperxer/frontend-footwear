@@ -10,7 +10,7 @@
                           data-bs-target="#navbarVerticalNavMenuEg2" aria-label="Toggle navigation"
                           aria-expanded="false" aria-controls="navbarVerticalNavMenuEg2">
                           <span class="d-flex justify-content-between align-items-center">
-                              <span class="text-dark">Filter</span>
+                              <span class="text-dark">ตัวกรอง</span>
 
                               <span class="navbar-toggler-default">
                                   <i class="bi-list"></i>
@@ -30,14 +30,16 @@
                           <!-- Form -->
                           <form @submit.prevent="searchProducts">
                               <div class="border-bottom pb-4 mb-4">
-                                  <h5>Brand</h5>
+                                  <h5>แบรนด์</h5>
 
                                   <div class="d-grid gap-2">
                                       <div class="form-check" v-for="brand in brands" :key="brand.id">
                                           <input class="form-check-input" type="checkbox" :value="brand.id"
-                                              v-model="filters.brandIds" :id="`brandCheckbox${brand.id}`">
-                                          <label class="form-check-label" :for="`brandCheckbox${brand.id}`">{{
-                                              brand.name }}</label>
+                                              v-model="filters.brandId" :id="`brandCheckbox${brand.id}`"
+                                              @change="searchProducts">
+                                          <label class="form-check-label" :for="`brandCheckbox${brand.id}`">
+                                              {{ brand.name }}
+                                          </label>
                                       </div>
                                   </div>
 
@@ -59,12 +61,13 @@
                               </div>
 
                               <div class="border-bottom pb-4 mb-4">
-                                  <h5>Size</h5>
+                                  <h5>ไซส์</h5>
 
                                   <div class="d-grid gap-2">
                                       <div class="row row-cols-2 row-cols-sm-4">
                                           <div v-for="size in sizes" :key="size.id" class="col-3 mb-2">
-                                              <button :class="['btn', 'btn-size', {}]">
+                                              <button :class="['btn', 'btn-size', {}]"
+                                                  @click="toggleSizeFilter(size.id)">
                                                   {{ size.size }}
                                               </button>
                                           </div>
@@ -73,34 +76,30 @@
                               </div>
 
                               <div class="border-bottom pb-4 mb-4">
-                                  <h5>Color</h5>
+                                  <h5>สี</h5>
 
                                   <div class="d-grid gap-2">
-                                      <!-- <div class="form-check" v-for="color in colors" :key="color.id">
-                                          <input class="form-check-input" type="checkbox" :value="color.id" v-model="filters.colorIds" :id="`colorCheckbox${color.id}`">
-                                          <label class="form-check-label" :for="`colorCheckbox${color.id}`">
-                                              <span :style="{ backgroundColor: getColorHex(color.name) }" class="color-swatch"></span>
-                                          </label>
-                                      </div> -->
                                       <div class="row row-cols-2 row-cols-sm-4">
-                                          <!-- Render color buttons here -->
                                           <div v-for="color in colors" :key="color.id" class="col mb-2">
                                               <button :class="['btn', 'btn-color', {}]"
-                                                  :style="{ backgroundColor: getColorHex(color.name) }"></button>
+                                                  :style="{ backgroundColor: getColorHex(color.name) }"
+                                                  @click="toggleColorFilter(color.id)"></button>
                                           </div>
                                       </div>
                                   </div>
                               </div>
 
                               <div class="border-bottom pb-4 mb-4">
-                                  <h5>Category</h5>
+                                  <h5>ประเภท</h5>
 
                                   <div class="d-grid gap-2">
                                       <div class="form-check" v-for="category in categories" :key="category.id">
                                           <input class="form-check-input" type="checkbox" :value="category.id"
-                                              v-model="filters.categoryIds" :id="`categoryCheckbox${category.id}`">
-                                          <label class="form-check-label" :for="`categoryCheckbox${category.id}`">{{
-                                              category.name }}</label>
+                                              v-model="filters.categoryId" :id="`categoryCheckbox${category.id}`"
+                                              @change="searchProducts">
+                                          <label class="form-check-label" :for="`categoryCheckbox${category.id}`">
+                                              {{ category.name }}
+                                          </label>
                                       </div>
                                   </div>
 
@@ -138,7 +137,7 @@
           <div class="col-lg-9">
               <div class="row align-items-center mb-5">
                   <div class="col-sm mb-3 mb-sm-0">
-                      <h6 class="mb-0">{{ products.length }} products</h6>
+                      <h6 class="mb-0">{{ products.length }} คู่</h6>
                   </div>
               </div>
 
@@ -162,8 +161,7 @@
                           </div>
                           <div class="card-body">
                               <div class="mb-2">
-                                  <!-- <a class="link-sm link-secondary" :href="`/category/${product.categoryId}`">{{
-                                      product.category.name }}</a> -->
+                                  <!-- <a class="link-sm link-secondary" :href="`/category/${product.categoryId}`">{{ product.category.name }}</a> -->
                               </div>
                               <h4 class="card-title">
                                   <a class="text-dark" :href="`/product/${product.id}`">{{ product.name }}</a>
@@ -196,10 +194,10 @@ export default {
   data() {
       return {
           filters: {
-              brandIds: [],
-              sizeIds: [],
-              colorIds: [],
-              categoryIds: []
+              brandId: [],
+              sizeId: [],
+              colorId: [],
+              categoryId: []
           },
           products: [],
           brands: [],
@@ -218,7 +216,7 @@ export default {
               'pink': '#FFC0CB',
               'brown': '#A52A2A',
               'gray': '#808080',
-              'silver': 'C0C0C0',
+              'silver': '#C0C0C0',
               'lime': '#00FF00',
               'cyan': '#00FFFF',
               'magenta': '#FF00FF',
@@ -228,7 +226,6 @@ export default {
               'olive': '#808000',
               'darkgreen': '#006400',
               'lavender': "#dcbeff"
-
           }
       };
   },
@@ -255,13 +252,13 @@ export default {
       },
       async searchProducts() {
           try {
-              const { brandIds, colorIds, sizeIds, categoryIds } = this.filters;
-              const response = await this.$axios.get('/products', {
+              const { brandId, colorId, sizeId, categoryId } = this.filters;
+              const response = await this.$axios.get('/products/filtermale', {
                   params: {
-                      brandIds: brandIds.join(','),
-                      colorIds: colorIds.join(','),
-                      sizeIds: sizeIds.join(','),
-                      categoryIds: categoryIds.join(',')
+                      brandId: brandId.join(','),
+                      colorId: colorId.join(','),
+                      sizeId: sizeId.join(','),
+                      categoryId: categoryId.join(',')
                   }
               });
               this.products = response.data;
@@ -271,22 +268,41 @@ export default {
       },
       clearFilters() {
           this.filters = {
-              brandIds: [],
-              sizeIds: [],
-              colorIds: [],
-              categoryIds: []
+              brandId: [],
+              sizeId: [],
+              colorId: [],
+              categoryId: []
           };
+          this.searchProducts();
+      },
+      toggleColorFilter(colorId) {
+          const index = this.filters.colorId.indexOf(colorId);
+          if (index > -1) {
+              this.filters.colorId.splice(index, 1);
+          } else {
+              this.filters.colorId.push(colorId);
+          }
+          this.searchProducts();
+      },
+      toggleSizeFilter(sizeId) {
+          const index = this.filters.sizeId.indexOf(sizeId);
+          if (index > -1) {
+              this.filters.sizeId.splice(index, 1);
+          } else {
+              this.filters.sizeId.push(sizeId);
+          }
           this.searchProducts();
       },
       getProductImage(image) {
           return image ? `http://localhost:3001/imgproducts/${image}` : '../assets/images/default.jpg';
       },
       getColorHex(colorName) {
-          return this.colorMap[colorName] || '#DDDDDD'; // สีเริ่มต้นถ้าชื่อสีไม่พบในแมพ
+          return this.colorMap[colorName] || '#DDDDDD'; // Default color if not found in map
       }
   }
 };
 </script>
+
 
 <style scoped>
 /* Add your responsive styles here */
