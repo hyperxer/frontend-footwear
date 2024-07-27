@@ -35,7 +35,7 @@
                                     <div class="d-grid gap-2">
                                         <div class="form-check" v-for="brand in brands" :key="brand.id">
                                             <input class="form-check-input" type="checkbox" :value="brand.id"
-                                                v-model="filters.brandIds" :id="`brandCheckbox${brand.id}`">
+                                                v-model="filters.brandId" :id="`brandCheckbox${brand.id}`">
                                             <label class="form-check-label" :for="`brandCheckbox${brand.id}`">{{
                                                 brand.name }}</label>
                                         </div>
@@ -77,7 +77,7 @@
   
                                     <div class="d-grid gap-2">
                                         <!-- <div class="form-check" v-for="color in colors" :key="color.id">
-                                            <input class="form-check-input" type="checkbox" :value="color.id" v-model="filters.colorIds" :id="`colorCheckbox${color.id}`">
+                                            <input class="form-check-input" type="checkbox" :value="color.id" v-model="filters.colorId" :id="`colorCheckbox${color.id}`">
                                             <label class="form-check-label" :for="`colorCheckbox${color.id}`">
                                                 <span :style="{ backgroundColor: getColorHex(color.name) }" class="color-swatch"></span>
                                             </label>
@@ -98,7 +98,7 @@
                                     <div class="d-grid gap-2">
                                         <div class="form-check" v-for="category in categories" :key="category.id">
                                             <input class="form-check-input" type="checkbox" :value="category.id"
-                                                v-model="filters.categoryIds" :id="`categoryCheckbox${category.id}`">
+                                                v-model="filters.categoryId" :id="`categoryCheckbox${category.id}`">
                                             <label class="form-check-label" :for="`categoryCheckbox${category.id}`">{{
                                                 category.name }}</label>
                                         </div>
@@ -196,10 +196,10 @@
     data() {
         return {
             filters: {
-                brandIds: [],
-                sizeIds: [],
-                colorIds: [],
-                categoryIds: []
+                brandId: [],
+                sizeId: [],
+                colorId: [],
+                categoryId: []
             },
             products: [],
             brands: [],
@@ -255,13 +255,13 @@
         },
         async searchProducts() {
             try {
-                const { brandIds, colorIds, sizeIds, categoryIds } = this.filters;
-                const response = await this.$axios.get('/products', {
+                const { brandId, colorId, sizeId, categoryId } = this.filters;
+                const response = await this.$axios.get('/products/filters', {
                     params: {
-                        brandIds: brandIds.join(','),
-                        colorIds: colorIds.join(','),
-                        sizeIds: sizeIds.join(','),
-                        categoryIds: categoryIds.join(',')
+                        brandId: brandId.join(','),
+                        colorId: colorId.join(','),
+                        sizeId: sizeId.join(','),
+                        categoryId: categoryId.join(',')
                     }
                 });
                 this.products = response.data;
@@ -271,10 +271,10 @@
         },
         clearFilters() {
             this.filters = {
-                brandIds: [],
-                sizeIds: [],
-                colorIds: [],
-                categoryIds: []
+                brandId: [],
+                sizeId: [],
+                colorId: [],
+                categoryId: []
             };
             this.searchProducts();
         },
